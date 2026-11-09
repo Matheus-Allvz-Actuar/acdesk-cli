@@ -14,7 +14,7 @@ Security invariants:
 - Never log, print, commit or pass credentials in command-line arguments.
 - Never treat a CLI-side permission check as authorization.
 - Preserve backend `401` and `403` responses and present actionable, non-sensitive errors.
-- Scope credentials to the current operating-system user and Actask server profile.
+- Scope credentials to the current operating-system user and Acdesk server profile.
 - Require explicit confirmation for destructive actions unless `--yes` is provided.
 
 Execution invariants:

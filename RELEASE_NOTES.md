@@ -1,3 +1,18 @@
+# Acdesk CLI v2.0.0
+
+## Alteracoes
+
+- O Actask passou a se chamar Acdesk. O comando agora e `acdesk` (antes `actask`), o pacote e `acdesk-cli` e a Skill e `acdesk-cli`.
+- O Server URL padrao do `login` passa a ser `https://acdesk-api.prd.o.actuar.cloud`. O host antigo `https://actaskapi.bluefronte.com` saiu do ar.
+- Os links de task do servidor oficial apontam para `https://acdesk.actuar.cloud`.
+- Perfis e credenciais ficam em `~/.acdesk/profiles.json` e no cofre do sistema com o prefixo `acdesk-cli:`.
+
+## Atualizacao
+
+Instale pela tag `v2.0.0` e rode `acdesk login` (Enter no Server URL aceita o host novo). Perfis e tokens do `actask` nao sao reaproveitados, porque apontam para o host desativado. Para remover o token antigo no Windows: `cmdkey /delete:"actask-cli:https://actaskapi.bluefronte.com"`. Desinstale o pacote antigo com `pip uninstall actask-cli`.
+
+---
+
 # Actask CLI v1.2.0
 
 ## Alteracoes

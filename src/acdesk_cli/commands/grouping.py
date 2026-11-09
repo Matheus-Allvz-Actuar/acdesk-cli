@@ -1,4 +1,4 @@
-"""Public task-grouping commands backed by the authorized Actask API."""
+"""Public task-grouping commands backed by the authorized Acdesk API."""
 
 from __future__ import annotations
 
@@ -7,9 +7,9 @@ from typing import NoReturn
 
 import typer
 
-from actask_cli.client.api import ActaskApiClient
-from actask_cli.client.errors import ApiError, ExitCode, NotFoundError, UnauthenticatedError
-from actask_cli.client.models import (
+from acdesk_cli.client.api import AcdeskApiClient
+from acdesk_cli.client.errors import ApiError, ExitCode, NotFoundError, UnauthenticatedError
+from acdesk_cli.client.models import (
     GroupedTaskPageResult,
     Task,
     TaskGroupingCandidate,
@@ -17,10 +17,10 @@ from actask_cli.client.models import (
     TaskGroupingOperation,
     TaskGroupingOperationPageResult,
 )
-from actask_cli.commands.auth import _active_session, _client, _delete_after_unauthenticated
-from actask_cli.commands.projects import _write_json
-from actask_cli.config.credentials import CredentialStore
-from actask_cli.task_refs import TaskReferenceError, parse_task_reference
+from acdesk_cli.commands.auth import _active_session, _client, _delete_after_unauthenticated
+from acdesk_cli.commands.projects import _write_json
+from acdesk_cli.config.credentials import CredentialStore
+from acdesk_cli.task_refs import TaskReferenceError, parse_task_reference
 
 app = typer.Typer(
     help="Group root tasks under one visible parent task and manage the grouping log."
@@ -364,7 +364,7 @@ def _grouping_payload(
 
 
 def _read_grouping_targets(
-    client: ActaskApiClient,
+    client: AcdeskApiClient,
     project_id: str,
     parent_reference: str,
     child_references: list[str],
@@ -391,7 +391,7 @@ def _read_grouping_targets(
 
 
 def _resolve_task_references(
-    client: ActaskApiClient,
+    client: AcdeskApiClient,
     project_id: str,
     parent_reference: str,
     child_references: list[str],
@@ -428,7 +428,7 @@ def _resolve_task_references(
 
 
 def _task_from_cache_or_api(
-    client: ActaskApiClient,
+    client: AcdeskApiClient,
     task_id: str,
     tasks_by_id: Mapping[str, Task],
 ) -> Task:
@@ -437,7 +437,7 @@ def _task_from_cache_or_api(
 
 
 def _resolve_from_candidates(
-    client: ActaskApiClient,
+    client: AcdeskApiClient,
     project_id: str,
     references: list[str],
 ) -> dict[str, str]:
@@ -479,7 +479,7 @@ def _ensure_task_in_project(task: Task, project_id: str) -> None:
 
 
 def _find_operation(
-    client: ActaskApiClient,
+    client: AcdeskApiClient,
     project_id: str,
     operation_id: str,
 ) -> TaskGroupingOperation:

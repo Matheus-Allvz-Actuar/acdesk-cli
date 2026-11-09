@@ -1,8 +1,8 @@
 import pytest
 from keyring.errors import KeyringError
 
-from actask_cli.config.credentials import CredentialStore, CredentialStoreError
-from actask_cli.config.profiles import ProfileStore, ServerProfile
+from acdesk_cli.config.credentials import CredentialStore, CredentialStoreError
+from acdesk_cli.config.profiles import ProfileStore, ServerProfile
 
 
 class FakeKeyring:
@@ -27,8 +27,8 @@ class FailingKeyring(FakeKeyring):
 def test_credentials_are_isolated_by_server_and_user() -> None:
     keyring = FakeKeyring()
     credentials = CredentialStore(keyring)
-    primary = ServerProfile.create("https://actask.example.test", "member@example.test")
-    other_user = ServerProfile.create("https://actask.example.test", "other@example.test")
+    primary = ServerProfile.create("https://acdesk.example.test", "member@example.test")
+    other_user = ServerProfile.create("https://acdesk.example.test", "other@example.test")
     other_server = ServerProfile.create("https://other.example.test", "member@example.test")
 
     credentials.set(primary, "<redacted-session-token>")
@@ -40,7 +40,7 @@ def test_credentials_are_isolated_by_server_and_user() -> None:
 
 def test_session_token_is_not_written_to_profile_configuration(tmp_path) -> None:
     config_path = tmp_path / "profiles.json"
-    profile = ServerProfile.create("https://actask.example.test", "member@example.test")
+    profile = ServerProfile.create("https://acdesk.example.test", "member@example.test")
     session_token = "<redacted-session-token>"
     ProfileStore(config_path).save_active(profile)
 
@@ -51,7 +51,7 @@ def test_session_token_is_not_written_to_profile_configuration(tmp_path) -> None
 
 def test_keyring_errors_do_not_expose_session_token() -> None:
     credentials = CredentialStore(FailingKeyring())
-    profile = ServerProfile.create("https://actask.example.test", "member@example.test")
+    profile = ServerProfile.create("https://acdesk.example.test", "member@example.test")
     session_token = "<redacted-session-token>"
 
     with pytest.raises(CredentialStoreError) as error:

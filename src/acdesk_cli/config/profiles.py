@@ -10,7 +10,10 @@ from getpass import getuser
 from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
 
-DEFAULT_SERVER_URL = "https://actaskapi.bluefronte.com"
+DEFAULT_SERVER_URL = "https://acdesk-api.prd.o.actuar.cloud"
+
+# API host -> web app URL of the official deployments, used for task links.
+KNOWN_WEB_URLS = {"acdesk-api.prd.o.actuar.cloud": "https://acdesk.actuar.cloud"}
 
 
 class ProfileError(ValueError):
@@ -19,7 +22,7 @@ class ProfileError(ValueError):
 
 @dataclass(frozen=True)
 class ServerProfile:
-    """The non-secret server and user reference for one Actask session."""
+    """The non-secret server and user reference for one Acdesk session."""
 
     server_url: str
     email: str
@@ -71,19 +74,10 @@ def normalize_web_url(web_url: str) -> str:
 
 
 def derive_web_url(server_url: str) -> str | None:
-    """Derive the web app URL of the official Actask deployments from their API URL.
-
-    ``actaskapi.<domain>`` serves ``actask.<domain>`` and ``actaskapi<env>.<domain>``
-    serves ``actask<env>.<domain>``. Other servers return ``None``.
-    """
+    """Return the web app URL of an official Acdesk deployment, or ``None`` for other servers."""
 
     host = urlsplit(server_url).hostname
-    if host is None or "." not in host:
-        return None
-    first_label, domain = host.split(".", 1)
-    if not first_label.startswith("actaskapi"):
-        return None
-    return f"https://actask{first_label.removeprefix('actaskapi')}.{domain}"
+    return KNOWN_WEB_URLS.get(host) if host is not None else None
 
 
 class ProfileStore:
@@ -94,7 +88,7 @@ class ProfileStore:
 
     @classmethod
     def default(cls) -> ProfileStore:
-        return cls(Path.home() / ".actask" / "profiles.json")
+        return cls(Path.home() / ".acdesk" / "profiles.json")
 
     def save_active(self, profile: ServerProfile) -> None:
         profiles = self._profiles()
@@ -120,7 +114,7 @@ class ProfileStore:
                 active["server_url"], active["email"], active.get("web_url")
             )
         except (AttributeError, KeyError, TypeError, json.JSONDecodeError) as error:
-            raise ProfileError("Actask profile configuration is invalid.") from error
+            raise ProfileError("Acdesk profile configuration is invalid.") from error
 
     def _profiles(self) -> list[ServerProfile]:
         if not self._config_path.exists():
@@ -132,7 +126,7 @@ class ProfileStore:
                 for item in data["profiles"]
             ]
         except (AttributeError, KeyError, TypeError, json.JSONDecodeError) as error:
-            raise ProfileError("Actask profile configuration is invalid.") from error
+            raise ProfileError("Acdesk profile configuration is invalid.") from error
 
     def _write(self, data: dict[str, object]) -> None:
         self._config_path.parent.mkdir(parents=True, exist_ok=True)
@@ -151,4 +145,4 @@ def _restrict_permissions(path: Path) -> None:
         text=True,
     )
     if result.returncode != 0:
-        raise ProfileError("Actask profile configuration could not be secured.")
+        raise ProfileError("Acdesk profile configuration could not be secured.")

@@ -5,7 +5,7 @@ from getpass import getuser
 
 import pytest
 
-from actask_cli.config.profiles import (
+from acdesk_cli.config.profiles import (
     ProfileError,
     ProfileStore,
     ServerProfile,
@@ -15,7 +15,7 @@ from actask_cli.config.profiles import (
 
 def test_profile_store_persists_only_non_secret_active_profile(tmp_path) -> None:
     config_path = tmp_path / "profiles.json"
-    first_profile = ServerProfile.create("https://actask.example.test/", "Member@Example.Test")
+    first_profile = ServerProfile.create("https://acdesk.example.test/", "Member@Example.Test")
     active_profile = ServerProfile.create("https://other.example.test", "member@example.test")
     profiles = ProfileStore(config_path)
 
@@ -26,7 +26,7 @@ def test_profile_store_persists_only_non_secret_active_profile(tmp_path) -> None
     assert json.loads(config_path.read_text(encoding="utf-8")) == {
         "active": {"server_url": "https://other.example.test", "email": "member@example.test"},
         "profiles": [
-            {"server_url": "https://actask.example.test", "email": "member@example.test"},
+            {"server_url": "https://acdesk.example.test", "email": "member@example.test"},
             {"server_url": "https://other.example.test", "email": "member@example.test"},
         ],
     }
@@ -42,7 +42,7 @@ def test_profile_store_persists_only_non_secret_active_profile(tmp_path) -> None
 
 def test_profile_store_persists_explicit_web_url_and_loads_legacy_profiles(tmp_path) -> None:
     config_path = tmp_path / "profiles.json"
-    legacy_data = {"server_url": "https://actaskapi.bluefronte.com", "email": "a@b.test"}
+    legacy_data = {"server_url": "https://acdesk-api.prd.o.actuar.cloud", "email": "a@b.test"}
     config_path.write_text(
         json.dumps({"active": legacy_data, "profiles": [legacy_data]}),
         encoding="utf-8",
@@ -50,9 +50,9 @@ def test_profile_store_persists_explicit_web_url_and_loads_legacy_profiles(tmp_p
     profiles = ProfileStore(config_path)
 
     legacy = profiles.active()
-    assert legacy == ServerProfile.create("https://actaskapi.bluefronte.com", "a@b.test")
+    assert legacy == ServerProfile.create("https://acdesk-api.prd.o.actuar.cloud", "a@b.test")
     assert legacy is not None
-    assert legacy.resolved_web_url == "https://actask.bluefronte.com"
+    assert legacy.resolved_web_url == "https://acdesk.actuar.cloud"
 
     custom = ServerProfile.create(
         "https://api.example.test", "a@b.test", "https://app.example.test/"
@@ -65,7 +65,7 @@ def test_profile_store_persists_explicit_web_url_and_loads_legacy_profiles(tmp_p
     assert profiles.active() == custom
     assert custom.resolved_web_url == "https://app.example.test"
     assert json.loads(config_path.read_text(encoding="utf-8"))["profiles"] == [
-        {"server_url": "https://actaskapi.bluefronte.com", "email": "a@b.test"},
+        {"server_url": "https://acdesk-api.prd.o.actuar.cloud", "email": "a@b.test"},
         {
             "server_url": "https://api.example.test",
             "email": "a@b.test",
@@ -77,9 +77,9 @@ def test_profile_store_persists_explicit_web_url_and_loads_legacy_profiles(tmp_p
 @pytest.mark.parametrize(
     ("server_url", "web_url"),
     [
-        ("https://actaskapi.bluefronte.com", "https://actask.bluefronte.com"),
-        ("https://actaskapistage.bluefronte.com", "https://actaskstage.bluefronte.com"),
-        ("https://actaskapidev.bluefronte.com", "https://actaskdev.bluefronte.com"),
+        ("https://acdesk-api.prd.o.actuar.cloud", "https://acdesk.actuar.cloud"),
+        ("https://acdesk-api.prd.o.actuar.cloud/", "https://acdesk.actuar.cloud"),
+        ("https://actaskapi.bluefronte.com", None),
         ("https://api.example.test", None),
     ],
 )
@@ -95,7 +95,7 @@ def test_profile_requires_https_web_url() -> None:
 
 def test_profile_requires_https_url_and_email() -> None:
     with pytest.raises(ProfileError, match="HTTPS"):
-        ServerProfile.create("http://actask.example.test", "member@example.test")
+        ServerProfile.create("http://acdesk.example.test", "member@example.test")
 
     with pytest.raises(ProfileError, match="email"):
-        ServerProfile.create("https://actask.example.test", "  ")
+        ServerProfile.create("https://acdesk.example.test", "  ")

@@ -19,7 +19,7 @@ def test_release_workflow_builds_each_supported_platform_and_publishes_checksums
     assert "macos-arm64" in workflow
     assert "python -m PyInstaller" in workflow
     assert "smoke_release_binary.py" in workflow
-    assert "sha256sum actask-* > SHA256SUMS" in workflow
+    assert "sha256sum acdesk-* > SHA256SUMS" in workflow
     assert "gh release create" in workflow
     assert "Verify release tag matches package version" in workflow
 

@@ -1,4 +1,4 @@
-"""HTTPX client for the Actask API contract."""
+"""HTTPX client for the Acdesk API contract."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ from urllib.parse import urlsplit
 
 import httpx
 
-from actask_cli.client.errors import (
+from acdesk_cli.client.errors import (
     ApiError,
     ConflictError,
     ForbiddenError,
@@ -18,7 +18,7 @@ from actask_cli.client.errors import (
     ServerError,
     UnauthenticatedError,
 )
-from actask_cli.client.models import (
+from acdesk_cli.client.models import (
     Case,
     CaseResult,
     Comment,
@@ -45,8 +45,8 @@ from actask_cli.client.models import (
 )
 
 
-class ActaskApiClient:
-    """Call the HTTPS Actask API without exposing session credentials."""
+class AcdeskApiClient:
+    """Call the HTTPS Acdesk API without exposing session credentials."""
 
     def __init__(
         self,

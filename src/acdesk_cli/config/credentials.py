@@ -5,7 +5,7 @@ from typing import Protocol
 import keyring
 from keyring.errors import KeyringError, PasswordDeleteError
 
-from actask_cli.config.profiles import ServerProfile
+from acdesk_cli.config.profiles import ServerProfile
 
 
 class CredentialStoreError(RuntimeError):
@@ -50,4 +50,4 @@ class CredentialStore:
 
 
 def _key(profile: ServerProfile) -> tuple[str, str]:
-    return (f"actask-cli:{profile.server_url}", profile.email)
+    return (f"acdesk-cli:{profile.server_url}", profile.email)

@@ -14,7 +14,7 @@ class TaskReferenceError(ValueError):
 
 
 def parse_task_reference(value: str) -> str:
-    """Return the task ID from an Actask task URL, or the stripped value itself.
+    """Return the task ID from an Acdesk task URL, or the stripped value itself.
 
     Task URLs follow the web app format ``https://<host>/tasks/all?task=<id>``.
     The host is not checked: the backend remains the authority on whether the
@@ -29,7 +29,7 @@ def parse_task_reference(value: str) -> str:
     parsed = urlsplit(url)
     is_task_path = parsed.path == "/tasks" or parsed.path.startswith("/tasks/")
     if parsed.scheme.lower() not in {"http", "https"} or not is_task_path:
-        raise TaskReferenceError("The URL is not an Actask task URL.")
+        raise TaskReferenceError("The URL is not an Acdesk task URL.")
     task_ids = [item.strip() for item in parse_qs(parsed.query).get("task", [])]
     if not task_ids or not task_ids[0]:
         raise TaskReferenceError("The task URL does not contain the 'task' parameter.")

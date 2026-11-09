@@ -16,7 +16,7 @@ class ExitCode(IntEnum):
 
 
 class ApiError(RuntimeError):
-    """A non-sensitive error returned by the Actask API client."""
+    """A non-sensitive error returned by the Acdesk API client."""
 
     def __init__(
         self,
@@ -41,7 +41,7 @@ class InvalidInputError(ApiError):
 class UnauthenticatedError(ApiError):
     def __init__(self, request_id: str | None) -> None:
         super().__init__(
-            "Session is invalid or expired. Run 'actask login'.",
+            "Session is invalid or expired. Run 'acdesk login'.",
             ExitCode.NOT_AUTHENTICATED,
             401,
             request_id,
@@ -66,14 +66,14 @@ class NotFoundError(ApiError):
 class ConflictError(ApiError):
     def __init__(self, request_id: str | None) -> None:
         super().__init__(
-            "Request conflicts with current Actask state.", ExitCode.CONFLICT, 409, request_id
+            "Request conflicts with current Acdesk state.", ExitCode.CONFLICT, 409, request_id
         )
 
 
 class MethodNotAllowedError(ApiError):
     def __init__(self, request_id: str | None) -> None:
         super().__init__(
-            "Actask API contract error: this CLI command is not supported by the server endpoint.",
+            "Acdesk API contract error: this CLI command is not supported by the server endpoint.",
             ExitCode.NETWORK_OR_SERVER,
             405,
             request_id,
@@ -85,7 +85,7 @@ class NetworkError(ApiError):
         normalized_method = method.upper()
         normalized_path = "/" + path.lstrip("/")
         super().__init__(
-            f"Unable to reach Actask server ({normalized_method} {normalized_path}; {cause_type}).",
+            f"Unable to reach Acdesk server ({normalized_method} {normalized_path}; {cause_type}).",
             ExitCode.NETWORK_OR_SERVER,
         )
         self.method = normalized_method
@@ -96,7 +96,7 @@ class NetworkError(ApiError):
 class ServerError(ApiError):
     def __init__(self, status_code: int | None = None, request_id: str | None = None) -> None:
         super().__init__(
-            "Actask server failed to process the request.",
+            "Acdesk server failed to process the request.",
             ExitCode.NETWORK_OR_SERVER,
             status_code,
             request_id,

@@ -7,12 +7,12 @@ from typing import NoReturn
 
 import typer
 
-from actask_cli.client.errors import ApiError, ExitCode, UnauthenticatedError
-from actask_cli.client.models import Project
-from actask_cli.commands.auth import _active_session, _client, _delete_after_unauthenticated
-from actask_cli.config.credentials import CredentialStore
+from acdesk_cli.client.errors import ApiError, ExitCode, UnauthenticatedError
+from acdesk_cli.client.models import Project
+from acdesk_cli.commands.auth import _active_session, _client, _delete_after_unauthenticated
+from acdesk_cli.config.credentials import CredentialStore
 
-app = typer.Typer(help="Read and create projects available to the active Actask user.")
+app = typer.Typer(help="Read and create projects available to the active Acdesk user.")
 
 
 @app.command("list")
@@ -21,7 +21,7 @@ def list_projects(
     page: int = typer.Option(1, min=1, help="Page number for local display pagination."),
     page_size: int = typer.Option(25, min=1, help="Number of projects per page."),
 ) -> None:
-    """List projects authorized by the Actask backend."""
+    """List projects authorized by the Acdesk backend."""
 
     profile, session_token = _active_session()
     credentials = CredentialStore()

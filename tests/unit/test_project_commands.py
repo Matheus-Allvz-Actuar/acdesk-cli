@@ -5,13 +5,13 @@ from dataclasses import dataclass
 
 from typer.testing import CliRunner
 
-from actask_cli.client.errors import ForbiddenError, MethodNotAllowedError
-from actask_cli.client.models import Project, ProjectCatalogResult, ProjectListResult, ProjectResult
-from actask_cli.commands import projects
-from actask_cli.config.profiles import ServerProfile
-from actask_cli.main import app
+from acdesk_cli.client.errors import ForbiddenError, MethodNotAllowedError
+from acdesk_cli.client.models import Project, ProjectCatalogResult, ProjectListResult, ProjectResult
+from acdesk_cli.commands import projects
+from acdesk_cli.config.profiles import ServerProfile
+from acdesk_cli.main import app
 
-PROFILE = ServerProfile.create("https://actask.example.test", "member@example.test")
+PROFILE = ServerProfile.create("https://acdesk.example.test", "member@example.test")
 PROJECT_ONE = Project(
     id="project-1",
     name="Example Project",
@@ -296,7 +296,7 @@ def test_projects_show_reports_contract_incompatibility_without_retrying(monkeyp
 
     assert result.exit_code == 7
     assert result.stderr == (
-        "Actask API contract error: this CLI command is not supported by the server endpoint.\n"
+        "Acdesk API contract error: this CLI command is not supported by the server endpoint.\n"
     )
 
 

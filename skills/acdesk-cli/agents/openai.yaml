@@ -1,0 +1,4 @@
+interface:
+  display_name: "Acdesk CLI"
+  short_description: "Operate Acdesk from a globally installed CLI"
+  default_prompt: "Use $acdesk-cli after confirming acdesk is installed globally."

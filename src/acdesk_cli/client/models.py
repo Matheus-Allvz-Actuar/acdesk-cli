@@ -1,11 +1,11 @@
-"""Typed models for responses used by the Actask CLI."""
+"""Typed models for responses used by the Acdesk CLI."""
 
 from __future__ import annotations
 
 from collections.abc import Mapping
 from dataclasses import dataclass
 
-from actask_cli.client.errors import ServerError
+from acdesk_cli.client.errors import ServerError
 
 
 @dataclass(frozen=True)
@@ -54,7 +54,7 @@ class LogoutResult:
 
 @dataclass(frozen=True)
 class Project:
-    """A project returned by the Actask API."""
+    """A project returned by the Acdesk API."""
 
     id: str
     name: str
@@ -97,7 +97,7 @@ class ProjectCatalogResult:
 
 @dataclass(frozen=True)
 class Task:
-    """A task returned by the Actask API."""
+    """A task returned by the Acdesk API."""
 
     id: str
     key: str
@@ -272,7 +272,7 @@ class GroupedTaskPageResult:
 
 @dataclass(frozen=True)
 class Case:
-    """A case linked to an Actask task."""
+    """A case linked to an Acdesk task."""
 
     id: str
     payload: Mapping[str, object]
@@ -297,7 +297,7 @@ class CaseResult:
 
 @dataclass(frozen=True)
 class Comment:
-    """A comment returned by the Actask API."""
+    """A comment returned by the Acdesk API."""
 
     id: str
     payload: Mapping[str, object]

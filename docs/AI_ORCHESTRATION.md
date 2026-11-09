@@ -1,4 +1,4 @@
-# AI Orchestration Guide for Actask CLI v1
+# AI Orchestration Guide for Acdesk CLI v1
 
 Este documento e o ponto de entrada para um orquestrador de IA implementar a v1.
 
@@ -6,7 +6,7 @@ Este documento e o ponto de entrada para um orquestrador de IA implementar a v1.
 
 1. Ler `AGENTS.md` e `.specs/STATE.md`.
 2. Ler integralmente `spec.md`, `design.md` e `tasks.md` da feature `cli-v1`.
-3. Confirmar acesso local aos repositorios `ActaskCLI` e `ActaskBack`.
+3. Confirmar acesso local aos repositorios `acdesk-cli` e `acdesk-backend`.
 4. Confirmar branch limpa ou identificar alteracoes do usuario sem modifica-las.
 5. Selecionar somente a proxima tarefa cujas dependencias estejam concluidas.
 
@@ -30,8 +30,8 @@ T01 pode apenas documentar gaps. T02 esta explicitamente autorizada a propor mud
 
 Quando uma mudanca de contrato for necessaria:
 
-1. Especificar primeiro o comportamento no `ActaskCLI`.
-2. Implementar e testar a autorizacao no `ActaskBack`.
+1. Especificar primeiro o comportamento no `acdesk-cli`.
+2. Implementar e testar a autorizacao no `acdesk-backend`.
 3. Publicar ou fixar o contrato de API.
 4. Implementar o cliente da CLI.
 5. Executar testes de contrato contra ambos.
@@ -52,7 +52,7 @@ O worker devolve commits, testes executados, contagem, desvios e riscos. O orque
 
 Na T11, usar a Skill oficial de criacao de Skills:
 
-1. Inicializar `actask-cli` em `skills/` com recursos `references`.
+1. Inicializar `acdesk-cli` em `skills/` com recursos `references`.
 2. Escrever frontmatter apenas com `name` e `description`.
 3. Colocar gatilhos completos na `description`.
 4. Manter o corpo procedural, conciso e em forma imperativa.

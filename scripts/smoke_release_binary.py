@@ -1,4 +1,4 @@
-"""Run the platform-neutral smoke check for a packaged Actask CLI binary."""
+"""Run the platform-neutral smoke check for a packaged Acdesk CLI binary."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from pathlib import Path
 
 
 def main() -> int:
-    """Run ``actask version`` and verify that it identifies the CLI."""
+    """Run ``acdesk version`` and verify that it identifies the CLI."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--binary", type=Path, required=True)
     args = parser.parse_args()
@@ -23,8 +23,8 @@ def main() -> int:
     if result.returncode != 0:
         sys.stderr.write(result.stderr)
         return result.returncode
-    if not result.stdout.startswith("actask "):
-        sys.stderr.write("Smoke test did not receive Actask version output.\n")
+    if not result.stdout.startswith("acdesk "):
+        sys.stderr.write("Smoke test did not receive Acdesk version output.\n")
         return 1
     return 0
 

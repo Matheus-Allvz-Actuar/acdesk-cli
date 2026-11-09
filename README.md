@@ -1,16 +1,16 @@
-# Actask CLI
+# Acdesk CLI
 
-CLI oficial do Actask para uso humano e por agentes de IA.
+CLI oficial do Acdesk para uso humano e por agentes de IA.
 
 > Status: **v1.0.3 publicada** em repositorio publico.
 
-O objetivo da v1 e oferecer login individual, consultas seguras e comandos essenciais de tasks e projetos. Toda autorizacao sera validada pelo backend do Actask; a CLI nunca sera a fonte de verdade para permissoes.
+O objetivo da v1 e oferecer login individual, consultas seguras e comandos essenciais de tasks e projetos. Toda autorizacao sera validada pelo backend do Acdesk; a CLI nunca sera a fonte de verdade para permissoes.
 
 ## Escopo da v1
 
 - Login e logout por usuario.
 - Credencial armazenada no cofre seguro do sistema operacional.
-- Identificacao da sessao com `actask whoami`.
+- Identificacao da sessao com `acdesk whoami`.
 - Listagem apenas de projetos acessiveis ao usuario.
 - Criacao de projetos com confirmacao, `--dry-run` e autorizacao `createProjects` do backend.
 - Listagem e leitura de tasks respeitando associacao ao projeto e permissoes.
@@ -20,7 +20,7 @@ O objetivo da v1 e oferecer login individual, consultas seguras e comandos essen
 - Listagem e criacao de comentarios vinculados a tasks, com mencoes explicitas por ID.
 - Agrupamento de tasks raiz, consulta da secao Agrupadas, log auditavel e undo por operacao.
 - Saida humana e estruturada por `--json`.
-- Skill `actask-cli` para agentes de IA operarem a CLI com guardrails.
+- Skill `acdesk-cli` para agentes de IA operarem a CLI com guardrails.
 - Binarios para Windows, Linux e macOS, alem de instalacao para desenvolvimento via Git.
 
 ## Documentacao para implementacao
@@ -38,7 +38,7 @@ A CLI pode antecipar indisponibilidade de um comando para melhorar a experiencia
 
 ## Repositorio oficial
 
-O unico repositorio oficial e [github.com/Matheus-Moura26/ActaskCLI](https://github.com/Matheus-Moura26/ActaskCLI). O codigo pode ser publico porque a autorizacao permanece no backend, mas isso nao torna forks ou binarios de terceiros confiaveis. Nao inclua tokens, senhas, arquivos de configuracao pessoais ou respostas reais da API em commits, testes ou exemplos. Consulte tambem [SECURITY.md](SECURITY.md).
+O unico repositorio oficial e [github.com/Matheus-Moura26/AcdeskCLI](https://github.com/Matheus-Allvz-Actuar/acdesk-cli). O codigo pode ser publico porque a autorizacao permanece no backend, mas isso nao torna forks ou binarios de terceiros confiaveis. Nao inclua tokens, senhas, arquivos de configuracao pessoais ou respostas reais da API em commits, testes ou exemplos. Consulte tambem [SECURITY.md](SECURITY.md).
 
 ## Instalacao
 
@@ -50,48 +50,48 @@ Baixe o arquivo correspondente somente na pagina de Releases do repositorio ofic
 
 | Sistema | Arquivo |
 | --- | --- |
-| Windows x64 | `actask-windows-x64.exe` |
-| Linux x64 | `actask-linux-x64` |
-| macOS Intel | `actask-macos-x64` |
-| macOS Apple Silicon | `actask-macos-arm64` |
+| Windows x64 | `acdesk-windows-x64.exe` |
+| Linux x64 | `acdesk-linux-x64` |
+| macOS Intel | `acdesk-macos-x64` |
+| macOS Apple Silicon | `acdesk-macos-arm64` |
 
 No Linux e macOS, conceda permissao de execucao e mova o binario para um diretorio no `PATH`:
 
 ```bash
-chmod +x actask-linux-x64
-sudo mv actask-linux-x64 /usr/local/bin/actask
-actask version
+chmod +x acdesk-linux-x64
+sudo mv acdesk-linux-x64 /usr/local/bin/acdesk
+acdesk version
 ```
 
-No Windows, instale o binario em `C:\Program Files\Actask` e inclua esse diretorio no `PATH` da maquina. Execute o PowerShell como administrador:
+No Windows, instale o binario em `C:\Program Files\Acdesk` e inclua esse diretorio no `PATH` da maquina. Execute o PowerShell como administrador:
 
 ```powershell
-New-Item -ItemType Directory -Force 'C:\Program Files\Actask'
-Move-Item .\actask-windows-x64.exe 'C:\Program Files\Actask\actask.exe'
+New-Item -ItemType Directory -Force 'C:\Program Files\Acdesk'
+Move-Item .\acdesk-windows-x64.exe 'C:\Program Files\Acdesk\acdesk.exe'
 $path = [Environment]::GetEnvironmentVariable('Path', 'Machine')
-[Environment]::SetEnvironmentVariable('Path', "$path;C:\Program Files\Actask", 'Machine')
+[Environment]::SetEnvironmentVariable('Path', "$path;C:\Program Files\Acdesk", 'Machine')
 ```
 
-Abra um novo terminal e confirme com `actask version`.
+Abra um novo terminal e confirme com `acdesk version`.
 
 ### Verificacao do download
 
 Baixe tambem `SHA256SUMS` da mesma release. No Linux, verifique o arquivo baixado assim:
 
 ```bash
-grep ' actask-linux-x64$' SHA256SUMS | sha256sum -c -
+grep ' acdesk-linux-x64$' SHA256SUMS | sha256sum -c -
 ```
 
 No macOS:
 
 ```bash
-grep ' actask-macos-arm64$' SHA256SUMS | shasum -a 256 -c -
+grep ' acdesk-macos-arm64$' SHA256SUMS | shasum -a 256 -c -
 ```
 
 No Windows, compare o hash exibido com a linha correspondente em `SHA256SUMS`:
 
 ```powershell
-Get-FileHash .\actask-windows-x64.exe -Algorithm SHA256
+Get-FileHash .\acdesk-windows-x64.exe -Algorithm SHA256
 ```
 
 Nao execute um binario cujo SHA-256 nao corresponda ao checksum publicado.
@@ -102,8 +102,8 @@ Nao execute um binario cujo SHA-256 nao corresponda ao checksum publicado.
 
 ```bash
 pipx ensurepath
-pipx install "git+https://github.com/Matheus-Moura26/ActaskCLI.git@v1.2.0"
-actask version
+pipx install "git+https://github.com/Matheus-Allvz-Actuar/acdesk-cli.git@v2.0.0"
+acdesk version
 ```
 
 Abra um novo terminal depois de `pipx ensurepath` para que o `PATH` seja atualizado.
@@ -111,13 +111,13 @@ Abra um novo terminal depois de `pipx ensurepath` para que o `PATH` seja atualiz
 ### Clone para desenvolvimento
 
 ```bash
-git clone https://github.com/Matheus-Moura26/ActaskCLI.git
-cd ActaskCLI
-git checkout v1.2.0
+git clone https://github.com/Matheus-Allvz-Actuar/acdesk-cli.git
+cd acdesk-cli
+git checkout v2.0.0
 python -m venv .venv
 source .venv/bin/activate
 python -m pip install -e ".[dev]"
-actask version
+acdesk version
 ```
 
 No Windows, ative o ambiente com `.\.venv\Scripts\Activate.ps1`. Para validar a instalacao de desenvolvimento, execute `python -m ruff check .`, `python -m mypy`, `python -m pytest` e `python -m build`.
@@ -125,22 +125,22 @@ No Windows, ative o ambiente com `.\.venv\Scripts\Activate.ps1`. Para validar a 
 ## Primeiro acesso
 
 ```bash
-actask login
-actask whoami
+acdesk login
+acdesk whoami
 ```
 
-`login` usa `https://actaskapi.bluefronte.com` como padrao; pressione Enter no campo Server URL para usa-la. Informe outra URL somente para staging ou ambiente proprio. A senha nao aparece no terminal. A autorizacao de cada comando continua sendo decidida pelo backend; um `403` significa que a conta autenticada nao possui permissao para aquela operacao.
+`login` usa `https://acdesk-api.prd.o.actuar.cloud` como padrao; pressione Enter no campo Server URL para usa-la. Informe outra URL somente para staging ou ambiente proprio. A senha nao aparece no terminal. A autorizacao de cada comando continua sendo decidida pelo backend; um `403` significa que a conta autenticada nao possui permissao para aquela operacao.
 
-Nos servidores oficiais (`https://actaskapi<ambiente>.<dominio>`), a CLI deriva a URL web usada nos links de task (`https://actask<ambiente>.<dominio>`). Para outro servidor, o `login` tambem pergunta a `Web URL for task links`; deixe vazio para nao gerar links.
+No servidor oficial (`https://acdesk-api.prd.o.actuar.cloud`), a CLI usa `https://acdesk.actuar.cloud` como URL web dos links de task. Para outro servidor, o `login` tambem pergunta a `Web URL for task links`; deixe vazio para nao gerar links.
 
 ### Links de tasks
 
-Todo argumento `<task-id>` aceita tambem a URL da task copiada do Actask, no formato `https://<host-web>/tasks/all?task=<task-id>`:
+Todo argumento `<task-id>` aceita tambem a URL da task copiada do Acdesk, no formato `https://<host-web>/tasks/all?task=<task-id>`:
 
 ```bash
-actask tasks show "https://actask.bluefronte.com/tasks/all?task=<task-id>" --json
-actask tasks url <task-id-ou-url>
-actask tasks url <task-id-ou-url> --json
+acdesk tasks show "https://acdesk.actuar.cloud/tasks/all?task=<task-id>" --json
+acdesk tasks url <task-id-ou-url>
+acdesk tasks url <task-id-ou-url> --json
 ```
 
 `tasks url` le a task pela rota autorizada e imprime apenas o link. O JSON de `tasks show`, `list`, `create`, `update` e `promote` inclui o campo `url`, e a saida humana ganha a URL como ultima coluna.
@@ -151,14 +151,14 @@ Use `--dry-run` para revisar o payload antes de criar. A chave e enviada em
 maiusculas, e os valores padrao seguem o contrato do backend:
 
 ```bash
-actask projects create \
+acdesk projects create \
   --name "Novo projeto" \
   --key "NOVO" \
   --current-sprint 1 \
   --timezone America/Sao_Paulo \
   --dry-run --json
 
-actask projects create \
+acdesk projects create \
   --name "Novo projeto" \
   --key "NOVO" \
   --yes --json
@@ -173,19 +173,19 @@ faz requisicao.
 Use o ID da task para listar os casos existentes e os campos configurados no projeto:
 
 ```bash
-actask tasks cases list <task-id> --json
-actask tasks cases fields <task-id> --json
+acdesk tasks cases list <task-id> --json
+acdesk tasks cases fields <task-id> --json
 ```
 
 Crie ou atualize um caso com confirmacao explicita. Os valores de campos personalizados devem ser um objeto JSON keyed pelos IDs retornados por `cases fields`:
 
 ```bash
-actask tasks cases create <task-id> \
+acdesk tasks cases create <task-id> \
   --description "Descricao do caso" \
   --field-values '{"<field-definition-id>":"valor"}' \
   --dry-run --json
 
-actask tasks cases update <task-id> <case-id> \
+acdesk tasks cases update <task-id> <case-id> \
   --field-values '{"<field-definition-id>":"novo valor"}' \
   --yes --json
 ```
@@ -198,10 +198,10 @@ Use o comando oficial para remover apenas o vinculo com a task pai. A task
 continua com o mesmo ID, projeto, conteudo e demais campos:
 
 ```bash
-actask whoami --json
-actask tasks show <task-id> --json
-actask tasks promote <task-id> --dry-run --json
-actask tasks promote <task-id> --yes --json
+acdesk whoami --json
+acdesk tasks show <task-id> --json
+acdesk tasks promote <task-id> --dry-run --json
+acdesk tasks promote <task-id> --yes --json
 ```
 
 O `--dry-run` nao faz requisicao. A CLI verifica o responsavel atual antes da
@@ -215,14 +215,14 @@ que ja e normal e seguro.
 Liste os comentarios existentes ou crie um comentario com mencoes. Repita `--mention-user-id` para marcar varias pessoas; o texto tambem pode conter mencoes `@label` que o backend resolve quando forem exatas:
 
 ```bash
-actask tasks comments list <task-id> --json
+acdesk tasks comments list <task-id> --json
 
-actask tasks comments create <task-id> \
+acdesk tasks comments create <task-id> \
   --content "Favor revisar @Ana" \
   --mention-user-id <user-id> \
   --dry-run --json
 
-actask tasks comments create <task-id> \
+acdesk tasks comments create <task-id> \
   --content "Resposta" \
   --parent-id <comment-id> \
   --yes --json
@@ -241,14 +241,14 @@ Crie a task pai primeiro, se necessario, como uma task raiz. Depois descubra
 candidatas, faca o dry-run e confirme o lote repetindo `--child`:
 
 ```bash
-actask tasks create --project <project-id> --title "Task pai" --sprint <number> --yes --json
-actask tasks grouping candidates --project <project-id> --json
-actask tasks grouping group --project <project-id> \
+acdesk tasks create --project <project-id> --title "Task pai" --sprint <number> --yes --json
+acdesk tasks grouping candidates --project <project-id> --json
+acdesk tasks grouping group --project <project-id> \
   --parent <parent-id-or-key> \
   --child <child-id-or-key> \
   --child <another-child-id-or-key> \
   --idempotency-key <key> --dry-run --json
-actask tasks grouping group --project <project-id> \
+acdesk tasks grouping group --project <project-id> \
   --parent <parent-id-or-key> \
   --child <child-id-or-key> \
   --child <another-child-id-or-key> \
@@ -258,9 +258,9 @@ actask tasks grouping group --project <project-id> \
 Consulte o log e os filhos agrupados, ou desfaça uma operacao especifica:
 
 ```bash
-actask tasks grouping list --project <project-id> --status active --json
-actask tasks grouping children <parent-task-id> --json
-actask tasks grouping undo --project <project-id> \
+acdesk tasks grouping list --project <project-id> --status active --json
+acdesk tasks grouping children <parent-task-id> --json
+acdesk tasks grouping undo --project <project-id> \
   --operation-id <operation-id> --yes --json
 ```
 
@@ -269,6 +269,6 @@ lote atomicamente e mantem o historico. Use os filtros comuns para localizar
 tasks agrupadoras ou agrupadas:
 
 ```bash
-actask tasks list --project <project-id> --filter isGroupingTask:equals:true --json
-actask tasks list --project <project-id> --filter isGroupedTask:equals:true --json
+acdesk tasks list --project <project-id> --filter isGroupingTask:equals:true --json
+acdesk tasks list --project <project-id> --filter isGroupedTask:equals:true --json
 ```

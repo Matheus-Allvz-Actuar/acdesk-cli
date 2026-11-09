@@ -5,10 +5,10 @@ from typing import NoReturn
 
 import typer
 
-from actask_cli.client.api import ActaskApiClient
-from actask_cli.client.errors import ApiError, ExitCode, UnauthenticatedError
-from actask_cli.config.credentials import CredentialStore, CredentialStoreError
-from actask_cli.config.profiles import (
+from acdesk_cli.client.api import AcdeskApiClient
+from acdesk_cli.client.errors import ApiError, ExitCode, UnauthenticatedError
+from acdesk_cli.config.credentials import CredentialStore, CredentialStoreError
+from acdesk_cli.config.profiles import (
     DEFAULT_SERVER_URL,
     ProfileError,
     ProfileStore,
@@ -17,7 +17,7 @@ from actask_cli.config.profiles import (
     normalize_server_url,
 )
 
-app = typer.Typer(help="Authenticate this CLI with Actask.")
+app = typer.Typer(help="Authenticate this CLI with Acdesk.")
 
 
 def _profile_store() -> ProfileStore:
@@ -28,13 +28,13 @@ def _credential_store() -> CredentialStore:
     return CredentialStore()
 
 
-def _client(base_url: str, session_token: str | None = None) -> ActaskApiClient:
-    return ActaskApiClient(base_url, session_token)
+def _client(base_url: str, session_token: str | None = None) -> AcdeskApiClient:
+    return AcdeskApiClient(base_url, session_token)
 
 
 @app.command()
 def login() -> None:
-    """Create a session for an Actask server profile."""
+    """Create a session for an Acdesk server profile."""
 
     server_url = typer.prompt("Server URL", default=DEFAULT_SERVER_URL)
     web_url: str | None = None
@@ -67,7 +67,7 @@ def login() -> None:
 
 @app.command()
 def logout() -> None:
-    """Invalidate the active Actask session and remove it locally."""
+    """Invalidate the active Acdesk session and remove it locally."""
 
     profile, session_token = _active_session()
     credentials = _credential_store()
@@ -162,7 +162,7 @@ def _delete_after_unauthenticated(credentials: CredentialStore, profile: ServerP
 
 
 def _exit_not_authenticated() -> NoReturn:
-    _exit("No active session. Run 'actask login'.", ExitCode.NOT_AUTHENTICATED)
+    _exit("No active session. Run 'acdesk login'.", ExitCode.NOT_AUTHENTICATED)
 
 
 def _exit_api_error(error: ApiError) -> NoReturn:

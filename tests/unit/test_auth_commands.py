@@ -5,14 +5,14 @@ from dataclasses import dataclass
 
 from typer.testing import CliRunner
 
-from actask_cli.client.errors import UnauthenticatedError
-from actask_cli.client.models import IdentityResult, LoginResult, LogoutResult, User
-from actask_cli.commands import auth
-from actask_cli.config.profiles import ServerProfile
-from actask_cli.main import app
+from acdesk_cli.client.errors import UnauthenticatedError
+from acdesk_cli.client.models import IdentityResult, LoginResult, LogoutResult, User
+from acdesk_cli.commands import auth
+from acdesk_cli.config.profiles import ServerProfile
+from acdesk_cli.main import app
 
 SESSION_TOKEN = "<redacted-session-token>"
-PROFILE = ServerProfile.create("https://actask.example.test", "member@example.test")
+PROFILE = ServerProfile.create("https://acdesk.example.test", "member@example.test")
 USER = User(
     id="user-member",
     name="Member User",
@@ -103,11 +103,11 @@ def test_login_uses_default_server_and_hides_password(monkeypatch) -> None:
 
     assert result.exit_code == 0
     assert profiles.active_profile == ServerProfile.create(
-        "https://actaskapi.bluefronte.com", "member@example.test"
+        "https://acdesk-api.prd.o.actuar.cloud", "member@example.test"
     )
     assert credentials.session_token == SESSION_TOKEN
     assert result.output == (
-        "Server URL [https://actaskapi.bluefronte.com]: \n"
+        "Server URL [https://acdesk-api.prd.o.actuar.cloud]: \n"
         "Email: member@example.test\n"
         "Password: \n"
         "Logged in as member@example.test.\n"
@@ -206,11 +206,11 @@ def test_revoked_session_is_removed_and_can_be_replaced_by_login(monkeypatch) ->
     login_result = runner.invoke(
         app,
         ["login"],
-        input="https://actask.example.test\n\nmember@example.test\n<redacted-password>\n",
+        input="https://acdesk.example.test\n\nmember@example.test\n<redacted-password>\n",
     )
 
     assert revoked_result.exit_code == 3
-    assert revoked_result.stderr == "Session is invalid or expired. Run 'actask login'.\n"
+    assert revoked_result.stderr == "Session is invalid or expired. Run 'acdesk login'.\n"
     assert credentials.session_token == SESSION_TOKEN
     assert login_result.exit_code == 0
     assert "<redacted-password>" not in login_result.output
@@ -240,4 +240,4 @@ def test_whoami_without_session_returns_actionable_not_authenticated_error(monke
     result = runner.invoke(app, ["whoami"])
 
     assert result.exit_code == 3
-    assert result.stderr == "No active session. Run 'actask login'.\n"
+    assert result.stderr == "No active session. Run 'acdesk login'.\n"

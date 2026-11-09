@@ -3,8 +3,8 @@ import json
 import httpx
 import pytest
 
-from actask_cli.client.api import ActaskApiClient
-from actask_cli.client.errors import (
+from acdesk_cli.client.api import AcdeskApiClient
+from acdesk_cli.client.errors import (
     ConflictError,
     ExitCode,
     ForbiddenError,
@@ -16,7 +16,7 @@ from actask_cli.client.errors import (
     UnauthenticatedError,
 )
 
-BASE_URL = "https://actask.example.test"
+BASE_URL = "https://acdesk.example.test"
 SESSION_TOKEN = "<redacted-session-token>"
 USER = {
     "id": "user-member",
@@ -95,9 +95,9 @@ def test_client_sends_login_body_and_typed_authenticated_requests() -> None:
         return httpx.Response(200, headers=headers, json={"detail": "logged out"})
 
     transport = httpx.MockTransport(handler)
-    with ActaskApiClient(BASE_URL, transport=transport) as client:
+    with AcdeskApiClient(BASE_URL, transport=transport) as client:
         login = client.login("member@example.test", "<redacted-password>")
-    with ActaskApiClient(BASE_URL, session_token=SESSION_TOKEN, transport=transport) as client:
+    with AcdeskApiClient(BASE_URL, session_token=SESSION_TOKEN, transport=transport) as client:
         identity = client.whoami()
         logout = client.logout()
 
@@ -141,7 +141,7 @@ def test_client_maps_http_errors_to_stable_exit_codes(status_code, error_type, e
             status_code, headers={"X-Request-ID": "req-error"}, json={"detail": "error"}
         )
 
-    client = ActaskApiClient(BASE_URL, transport=httpx.MockTransport(handler))
+    client = AcdeskApiClient(BASE_URL, transport=httpx.MockTransport(handler))
 
     with pytest.raises(error_type) as error:
         client.whoami()
@@ -158,7 +158,7 @@ def test_client_maps_timeout_to_network_error() -> None:
         requests.append(request)
         raise httpx.ReadTimeout("timed out", request=request)
 
-    client = ActaskApiClient(BASE_URL, transport=httpx.MockTransport(handler))
+    client = AcdeskApiClient(BASE_URL, transport=httpx.MockTransport(handler))
 
     with pytest.raises(NetworkError) as error:
         client.whoami()
@@ -176,7 +176,7 @@ def test_client_maps_timeout_to_network_error() -> None:
 
 def test_client_rejects_non_https_server_url() -> None:
     with pytest.raises(InvalidInputError) as error:
-        ActaskApiClient("http://actask.example.test")
+        AcdeskApiClient("http://acdesk.example.test")
 
     assert error.value.exit_code == ExitCode.INVALID_INPUT
 
@@ -190,7 +190,7 @@ def test_client_reads_projects_from_the_authorized_routes() -> None:
             return httpx.Response(200, headers={"X-Request-ID": "req-list"}, json=[PROJECT])
         return httpx.Response(200, headers={"X-Request-ID": "req-show"}, json=PROJECT)
 
-    with ActaskApiClient(
+    with AcdeskApiClient(
         BASE_URL, session_token=SESSION_TOKEN, transport=httpx.MockTransport(handler)
     ) as client:
         listed = client.list_projects()
@@ -214,7 +214,7 @@ def test_client_creates_project_through_the_authorized_route() -> None:
         requests.append(request)
         return httpx.Response(200, headers={"X-Request-ID": "req-create-project"}, json=PROJECT)
 
-    with ActaskApiClient(
+    with AcdeskApiClient(
         BASE_URL, session_token=SESSION_TOKEN, transport=httpx.MockTransport(handler)
     ) as client:
         created = client.create_project(
@@ -249,7 +249,7 @@ def test_client_reads_project_columns_and_field_registry() -> None:
             return httpx.Response(200, json=[{"id": "column-pending", "name": "Pendentes"}])
         return httpx.Response(200, json=[{"key": "status", "options": []}])
 
-    with ActaskApiClient(
+    with AcdeskApiClient(
         BASE_URL, session_token=SESSION_TOKEN, transport=httpx.MockTransport(handler)
     ) as client:
         columns = client.list_project_columns("project-1")
@@ -283,7 +283,7 @@ def test_client_reads_tasks_from_the_authorized_routes() -> None:
             )
         return httpx.Response(200, headers={"X-Request-ID": "req-show"}, json=TASK)
 
-    with ActaskApiClient(
+    with AcdeskApiClient(
         BASE_URL, session_token=SESSION_TOKEN, transport=httpx.MockTransport(handler)
     ) as client:
         listed = client.list_tasks({"project_id": "project-1", "page": 1, "page_size": 25})
@@ -314,7 +314,7 @@ def test_client_promotes_task_through_the_official_endpoint() -> None:
             json={**TASK, "parent_id": None},
         )
 
-    with ActaskApiClient(
+    with AcdeskApiClient(
         BASE_URL, session_token=SESSION_TOKEN, transport=httpx.MockTransport(handler)
     ) as client:
         result = client.promote_task("task-1")
@@ -382,7 +382,7 @@ def test_client_reads_and_writes_task_groupings() -> None:
             )
         raise AssertionError(f"unexpected request path: {request.url.path}")
 
-    with ActaskApiClient(
+    with AcdeskApiClient(
         BASE_URL, session_token=SESSION_TOKEN, transport=httpx.MockTransport(handler)
     ) as client:
         candidates = client.list_task_grouping_candidates(
@@ -440,7 +440,7 @@ def test_client_writes_tasks_to_the_authorized_routes() -> None:
         requests.append(request)
         return httpx.Response(200, headers={"X-Request-ID": "req-write"}, json=TASK)
 
-    with ActaskApiClient(
+    with AcdeskApiClient(
         BASE_URL, session_token=SESSION_TOKEN, transport=httpx.MockTransport(handler)
     ) as client:
         created = client.create_task({"project_id": "project-1", "title": "Example", "sprint": 1})
@@ -482,7 +482,7 @@ def test_client_reads_case_fields_and_writes_cases() -> None:
             return httpx.Response(200, headers={"X-Request-ID": "req-fields"}, json=case_fields)
         return httpx.Response(200, headers={"X-Request-ID": "req-case"}, json=CASE)
 
-    with ActaskApiClient(
+    with AcdeskApiClient(
         BASE_URL, session_token=SESSION_TOKEN, transport=httpx.MockTransport(handler)
     ) as client:
         fields = client.list_project_case_fields("project-1")
@@ -515,7 +515,7 @@ def test_client_reads_and_writes_comments() -> None:
             json=COMMENT,
         )
 
-    with ActaskApiClient(
+    with AcdeskApiClient(
         BASE_URL, session_token=SESSION_TOKEN, transport=httpx.MockTransport(handler)
     ) as client:
         listed = client.list_comments("task-1")
@@ -580,7 +580,7 @@ def test_client_moves_task_with_ordering_revisions_without_project_prefetch(
             return httpx.Response(200, json={**moving_task, "column_id": "column-2"})
         raise AssertionError(f"unexpected request path: {request.url.path}")
 
-    with ActaskApiClient(
+    with AcdeskApiClient(
         BASE_URL, session_token=SESSION_TOKEN, transport=httpx.MockTransport(handler)
     ) as client:
         moved = client.move_task("task-1", "column-2", position)
@@ -629,7 +629,7 @@ def test_client_reorders_within_column_without_anchoring_to_the_moving_task() ->
             return httpx.Response(200, json={**moving_task, "position": 0})
         raise AssertionError(f"unexpected request path: {request.url.path}")
 
-    with ActaskApiClient(
+    with AcdeskApiClient(
         BASE_URL, session_token=SESSION_TOKEN, transport=httpx.MockTransport(handler)
     ) as client:
         client.move_task("task-1", "column-2", position=0)

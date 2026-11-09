@@ -11,16 +11,16 @@ from typing import NoReturn, cast
 
 import typer
 
-from actask_cli.client.api import ActaskApiClient
-from actask_cli.client.errors import ApiError, ExitCode, ServerError, UnauthenticatedError
-from actask_cli.client.models import Case, Comment, Task
-from actask_cli.commands.auth import _active_session, _client, _delete_after_unauthenticated
-from actask_cli.commands.grouping import app as grouping_app
-from actask_cli.commands.projects import _write_json
-from actask_cli.config.credentials import CredentialStore
-from actask_cli.task_refs import TaskReferenceError, build_task_url, parse_task_reference
+from acdesk_cli.client.api import AcdeskApiClient
+from acdesk_cli.client.errors import ApiError, ExitCode, ServerError, UnauthenticatedError
+from acdesk_cli.client.models import Case, Comment, Task
+from acdesk_cli.commands.auth import _active_session, _client, _delete_after_unauthenticated
+from acdesk_cli.commands.grouping import app as grouping_app
+from acdesk_cli.commands.projects import _write_json
+from acdesk_cli.config.credentials import CredentialStore
+from acdesk_cli.task_refs import TaskReferenceError, build_task_url, parse_task_reference
 
-app = typer.Typer(help="Read and modify tasks available to the active Actask user.")
+app = typer.Typer(help="Read and modify tasks available to the active Acdesk user.")
 cases_app = typer.Typer(help="List and modify cases linked to a task.")
 comments_app = typer.Typer(help="List and create comments linked to a task.")
 app.add_typer(cases_app, name="cases")
@@ -109,7 +109,7 @@ def show_task_url(
     web_url = profile.resolved_web_url
     if web_url is None:
         _exit(
-            "The web URL for this server is unknown. Run 'actask login' and provide the Web URL.",
+            "The web URL for this server is unknown. Run 'acdesk login' and provide the Web URL.",
             ExitCode.INVALID_INPUT,
         )
     credentials = CredentialStore()
@@ -742,7 +742,7 @@ def _parse_json_object(value: str | None, option_name: str) -> dict[str, object]
 
 
 def _validate_case_field_values(
-    client: ActaskApiClient,
+    client: AcdeskApiClient,
     project_id: str,
     field_values: Mapping[str, object],
     *,
@@ -956,7 +956,7 @@ def _confirm(message: str, yes: bool) -> bool:
     return yes or typer.confirm(message)
 
 
-def _require_task_responsibility(client: ActaskApiClient, task_id: str) -> Task:
+def _require_task_responsibility(client: AcdeskApiClient, task_id: str) -> Task:
     """Block CLI writes unless the task is unassigned or owned by this user.
 
     This is a CLI-side guardrail for the requested command behavior. The API

@@ -5,8 +5,8 @@ from dataclasses import dataclass, field
 
 from typer.testing import CliRunner
 
-from actask_cli.client.errors import ConflictError, ForbiddenError
-from actask_cli.client.models import (
+from acdesk_cli.client.errors import ConflictError, ForbiddenError
+from acdesk_cli.client.models import (
     Case,
     CaseResult,
     Comment,
@@ -19,12 +19,12 @@ from actask_cli.client.models import (
     TaskResult,
     User,
 )
-from actask_cli.commands import tasks
-from actask_cli.config.profiles import ServerProfile
-from actask_cli.main import app
+from acdesk_cli.commands import tasks
+from acdesk_cli.config.profiles import ServerProfile
+from acdesk_cli.main import app
 
 PROFILE = ServerProfile.create(
-    "https://actask.example.test", "member@example.test", "https://app.example.test"
+    "https://acdesk.example.test", "member@example.test", "https://app.example.test"
 )
 TASK_URL = "https://app.example.test/tasks/all?task=task-1"
 TASK = Task(
@@ -365,7 +365,7 @@ def test_task_commands_accept_web_url_in_place_of_task_id(monkeypatch) -> None:
         return original_show_task(task_id)
 
     monkeypatch.setattr(client, "show_task", recording_show_task)
-    url = "https://actask.bluefronte.com/tasks/all?task=task-1&comment=comment-1"
+    url = "https://acdesk.actuar.cloud/tasks/all?task=task-1&comment=comment-1"
 
     show = runner.invoke(app, ["tasks", "show", url])
     promote = runner.invoke(app, ["tasks", "promote", url, "--yes"])
@@ -456,7 +456,7 @@ def test_task_commands_reject_web_url_without_task_before_request(monkeypatch) -
     client = FakeClient(foreign_task=True)
     _install_fakes(monkeypatch, client)
 
-    result = runner.invoke(app, ["tasks", "show", "https://actask.bluefronte.com/tasks/all"])
+    result = runner.invoke(app, ["tasks", "show", "https://acdesk.actuar.cloud/tasks/all"])
 
     assert result.exit_code == 2
     assert result.stderr == "The task URL does not contain the 'task' parameter.\n"
@@ -489,7 +489,7 @@ def test_tasks_url_requires_known_web_url_before_request(monkeypatch) -> None:
     show_result = runner.invoke(app, ["tasks", "show", "task-1", "--json"])
 
     assert url_result.exit_code == 2
-    assert "Run 'actask login' and provide the Web URL." in url_result.stderr
+    assert "Run 'acdesk login' and provide the Web URL." in url_result.stderr
     assert json.loads(show_result.output)["data"]["url"] is None
 
 
@@ -733,7 +733,7 @@ def test_tasks_update_preserves_conflict_response(monkeypatch) -> None:
     result = runner.invoke(app, ["tasks", "update", "task-1", "--title", "Updated", "--yes"])
 
     assert result.exit_code == 6
-    assert result.stderr == "Request conflicts with current Actask state.\n"
+    assert result.stderr == "Request conflicts with current Acdesk state.\n"
 
 
 def test_tasks_update_reads_multiline_description_file(tmp_path) -> None:

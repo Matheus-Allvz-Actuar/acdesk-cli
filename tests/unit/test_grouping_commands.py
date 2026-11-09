@@ -7,8 +7,8 @@ from dataclasses import dataclass, field
 
 from typer.testing import CliRunner
 
-from actask_cli.client.errors import NotFoundError
-from actask_cli.client.models import (
+from acdesk_cli.client.errors import NotFoundError
+from acdesk_cli.client.models import (
     GroupedTask,
     GroupedTaskPageResult,
     Task,
@@ -18,11 +18,11 @@ from actask_cli.client.models import (
     TaskGroupingOperationPageResult,
     TaskGroupingOperationResult,
 )
-from actask_cli.commands import grouping
-from actask_cli.config.profiles import ServerProfile
-from actask_cli.main import app
+from acdesk_cli.commands import grouping
+from acdesk_cli.config.profiles import ServerProfile
+from acdesk_cli.main import app
 
-PROFILE = ServerProfile.create("https://actask.example.test", "member@example.test")
+PROFILE = ServerProfile.create("https://acdesk.example.test", "member@example.test")
 USER = object()
 PARENT = Task(
     "parent-1",
@@ -313,7 +313,7 @@ def test_group_accepts_web_urls_and_detects_url_id_duplicates(monkeypatch) -> No
         raise AssertionError("dry-run and invalid input must not construct a network client")
 
     monkeypatch.setattr(grouping, "_client", unexpected_network)
-    base = "https://actask.bluefronte.com/tasks/all?task="
+    base = "https://acdesk.actuar.cloud/tasks/all?task="
     command = ["tasks", "grouping", "group", "--project", "project-1"]
 
     dry_run = runner.invoke(
@@ -358,7 +358,7 @@ def test_children_accepts_parent_web_url(monkeypatch) -> None:
             "tasks",
             "grouping",
             "children",
-            "https://actask.bluefronte.com/tasks/all?task=parent-1",
+            "https://acdesk.actuar.cloud/tasks/all?task=parent-1",
             "--json",
         ],
     )

@@ -1,4 +1,4 @@
-"""Offline forward scenarios for the public Actask CLI Skill."""
+"""Offline forward scenarios for the public Acdesk CLI Skill."""
 
 from __future__ import annotations
 
@@ -8,13 +8,13 @@ from pathlib import Path
 
 from typer.testing import CliRunner
 
-from actask_cli.client.errors import ForbiddenError
-from actask_cli.client.models import IdentityResult, Task, TaskListResult, User
-from actask_cli.commands import auth, tasks
-from actask_cli.config.profiles import ServerProfile
-from actask_cli.main import app
+from acdesk_cli.client.errors import ForbiddenError
+from acdesk_cli.client.models import IdentityResult, Task, TaskListResult, User
+from acdesk_cli.commands import auth, tasks
+from acdesk_cli.config.profiles import ServerProfile
+from acdesk_cli.main import app
 
-PROFILE = ServerProfile.create("https://actask.example.test", "member@example.test")
+PROFILE = ServerProfile.create("https://acdesk.example.test", "member@example.test")
 USER = User("user-1", "Example User", "member@example.test", False, True, ("tasks.read",))
 TASK = Task(
     "task-1",
@@ -64,18 +64,18 @@ class ForbiddenTaskClient:
 
 
 def test_skill_documents_cli_only_and_required_stops() -> None:
-    skill = Path("skills/actask-cli/SKILL.md").read_text(encoding="utf-8")
-    reference = Path("skills/actask-cli/references/commands.md").read_text(encoding="utf-8")
+    skill = Path("skills/acdesk-cli/SKILL.md").read_text(encoding="utf-8")
+    reference = Path("skills/acdesk-cli/references/commands.md").read_text(encoding="utf-8")
 
-    assert "Use only the installed `actask` command." in skill
-    assert "Do not call the Actask API, database, browser, or credential store directly." in skill
+    assert "Use only the installed `acdesk` command." in skill
+    assert "Do not call the Acdesk API, database, browser, or credential store directly." in skill
     assert "Exit code `3` / `401`: stop." in skill
     assert "Exit code `4` / `403`: stop." in skill
     assert "--dry-run" in skill
-    assert "actask whoami --json" in reference
+    assert "acdesk whoami --json" in reference
     assert "Treat terms such as \"pendentes\"" in skill
     assert "meta.total" in skill
-    assert "actask projects columns <project-id> --json" in skill
+    assert "acdesk projects columns <project-id> --json" in skill
     assert "--filter column:=:<column-id>" in reference
     assert "--parent-id <parent-task-id>" in reference
     assert "assignee_name" in skill
@@ -88,14 +88,14 @@ def test_skill_documents_cli_only_and_required_stops() -> None:
     assert "moveTasks" in skill
     assert "tasks grouping undo" in reference
     assert "isGroupingTask:equals:true" in reference
-    assert "actask tasks show <task-url> --json" in skill
-    assert "actask tasks url <task-id> --json" in skill
+    assert "acdesk tasks show <task-url> --json" in skill
+    assert "acdesk tasks url <task-id> --json" in skill
     assert "Never invent a link." in skill
     assert "/tasks/all?task=<task-id>" in reference
-    assert "actask tasks url <task-id-or-url> --json" in reference
+    assert "acdesk tasks url <task-id-or-url> --json" in reference
     assert "Web URL for task links" in reference
     assert "<redacted-session-token>" not in skill + reference
-    assert "https://github.com/Matheus-Moura26/ActaskCLI" in skill
+    assert "https://github.com/Matheus-Allvz-Actuar/acdesk-cli" in skill
     assert "SHA256SUMS" in skill
     assert "fork" in skill.lower()
 
